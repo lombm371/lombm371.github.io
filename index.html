@@ -9,39 +9,89 @@
 </head>
 
 <body>
-    <!-- Persistent audio player (kept outside the dynamic content). Autoplay/loop; playsinline for mobile. -->
-    <audio id="bg-audio" autoplay loop playsinline preload="auto">
-        <source src="/images/The Beast OST Suite.mp3" type="audio/mpeg">
+    <!-- Persistent audio player (kept outside the dynamic content) -->
+        <audio id="bg-audio" loop>
+            <source src="/images/The Beast OST Suite.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
+
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="entry-1/index.html">Entry 1</a></li>
+                <li><a href="entry-2/index.html">Entry 2</a></li>
+            </ul>
+        </nav>
+    </header>
 
     <!-- Content area that will be swapped via PJAX so audio isn't interrupted -->
     <main id="content">
         <div id="pjax-content">
             <h1>Fateful Expansion of Ai!</h1>
-            <p>Explore the collection below.</p>
+            <ul>
+                <li><a href="entry-1/index.html">Entry 1</a></li>
+                <li><a href="entry-2/index.html">Entry 2</a></li>
+                <li><a href="#">Entry 3</a></li>
+            </ul>
+
             <img src="images/AdobeStock_565971196.png" width="600" height="450" alt="">
         </div>
     </main>
+
+    <!-- Small visible audio control so users can start/pause playback (autoplay may be blocked by browsers) -->
+    <div class="audio-toggle" aria-hidden="false">
+        <button id="audio-toggle">Play music</button>
+    </div>
 
     <script>
         // Simple PJAX: intercept same-origin link clicks, fetch the page, extract #pjax-content, replace content
         (function () {
             const audio = document.getElementById('bg-audio');
+            const toggle = document.getElementById('audio-toggle');
             const content = document.getElementById('content');
 
-                            // Attempt autoplay; remove visual controls. If browser blocks autoplay with sound,
-                            // play will be attempted again on the first user gesture (click/touch) without showing a button.
-                            function tryPlayOnce() {
-                                if (!audio) return;
-                                audio.play().catch(()=>{});
-                                document.removeEventListener('click', tryPlayOnce);
-                                document.removeEventListener('touchstart', tryPlayOnce);
+                    // Update toggle label based on state
+                    function updateToggle() {
+                        toggle.textContent = audio && !audio.paused ? 'Pause music' : 'Play music';
+                    }
+
+                    // Try to restore playback position & playing state from localStorage
+                    (function restorePlayback() {
+                        try {
+                            const pos = parseFloat(localStorage.getItem('bg-audio-pos') || '0');
+                            const playing = localStorage.getItem('bg-audio-playing') === 'true';
+                            if (!isNaN(pos) && pos > 0) {
+                                // wait for metadata before setting time
+                                audio.addEventListener('loadedmetadata', function () {
+                                    try { audio.currentTime = Math.min(pos, audio.duration || pos); } catch (e) { }
+                                }, {once: true});
                             }
-                            // Try immediately, then listen for a gesture fallback
-                            tryPlayOnce();
-                            document.addEventListener('click', tryPlayOnce);
-                            document.addEventListener('touchstart', tryPlayOnce, {passive: true});
+                            if (playing) {
+                                // user wants playback — try to play (may be blocked until user gesture)
+                                audio.play().catch(()=>{});
+                            }
+                        } catch (err) { /* ignore storage errors */ }
+                    })();
+
+                    toggle.addEventListener('click', function () {
+                        if (!audio) return;
+                        if (audio.paused) {
+                            audio.play().catch(() => {
+                                toggle.textContent = 'Enable audio in browser';
+                            });
+                        } else {
+                            audio.pause();
+                        }
+                        // persist playing state
+                        try { localStorage.setItem('bg-audio-playing', (!audio.paused).toString()); } catch (e) {}
+                        updateToggle();
+                    });
+
+                    // Persist currentTime regularly so direct loads can resume
+                    setInterval(function () {
+                        try { if (audio && !isNaN(audio.currentTime)) localStorage.setItem('bg-audio-pos', audio.currentTime.toString()); } catch (e) {}
+                    }, 1000);
 
             // Helper to fetch and replace content
             async function loadUrl(url, addToHistory = true) {
@@ -102,7 +152,8 @@
                 loadUrl(url, false);
             });
 
-            // no visual audio controls — nothing to initialize
+            // Initialize toggle label
+            updateToggle();
         })();
     </script>
 
