@@ -2,18 +2,71 @@
 <title>Harmonic Collection – Entry 2</title>
   <link rel="stylesheet" href="../styles.css">
   <h1>What's buzzing in the world of Ai</h1>
+<!DOCTYPE html>
+<html lang="en">
 
-  <h2>Entry #2 – Friend.com</h2>
-<p>Friend.com is an AI startup founded by Avi Schiffmann, known for creating a COVID-19 tracking website. 
-    The company has developed a wearable AI companion designed to combat loneliness by providing emotional support. The device, resembling a pendant, 
-    is worn around the neck and continuously listens to the user's environment. It connects to a smartphone app via Bluetooth and uses the Claude 3.5 language 
-    model to offer real-time, personalized interactions. The device can respond to voice prompts and also proactively engage with users based on contextual cues.
-Priced at $99, the Friend pendant boasts a 15-hour battery life and comes in 
-various colors. It is set to ship in January 2025. The company has already received over 1,000 pre-orders. In a notable move, 
-Friend.com purchased the domain name friend.com for $1.8 million, aiming to establish a strong brand presence 
-Today in AI Friend's approach emphasizes building deeper, emotionally resonant 
-relationships with users, distinguishing itself from other AI companions by focusing 
-on genuine companionship rather than productivity or entertainment. The company 
-envisions its product as a supplement to human connection, not a replacement</p>
-<img src="https://static.independent.co.uk/2024/07/31/16/cta-desktop.jpg" width="400" height=auto alt="">
-<img src="https://i.ytimg.com/vi/O_Q1hoEhfk4/maxresdefault.jpg" width="400" height=auto alt="">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Harmonic Collection – Entry 2</title>
+  <link rel="stylesheet" href="../styles.css">
+</head>
+
+<body>
+  <!-- Audio for direct page loads (index.html also provides audio for PJAX navigation) -->
+  <audio id="bg-audio" loop>
+    <source src="/images/The Beast OST Suite.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+  <div class="audio-toggle" aria-hidden="false">
+    <button id="audio-toggle">Play music</button>
+  </div>
+
+  <script>
+    // Minimal audio toggle for direct loads + restore state from localStorage
+    (function(){
+      var audio = document.getElementById('bg-audio');
+      var toggle = document.getElementById('audio-toggle');
+      if(!toggle || !audio) return;
+      function update(){ toggle.textContent = audio.paused ? 'Play music' : 'Pause music'; }
+
+      try {
+        var pos = parseFloat(localStorage.getItem('bg-audio-pos') || '0');
+        var playing = localStorage.getItem('bg-audio-playing') === 'true';
+        if(!isNaN(pos) && pos > 0) {
+          audio.addEventListener('loadedmetadata', function(){ try{ audio.currentTime = Math.min(pos, audio.duration || pos); }catch(e){} }, {once:true});
+        }
+        if(playing) audio.play().catch(()=>{});
+      } catch(e) {}
+
+      toggle.addEventListener('click', function(){
+        if(audio.paused) audio.play().catch(()=>{ toggle.textContent='Enable audio in browser'; }); else audio.pause();
+        try{ localStorage.setItem('bg-audio-playing', (!audio.paused).toString()); }catch(e){}
+        update();
+      });
+      setInterval(function(){ try{ if(audio && !isNaN(audio.currentTime)) localStorage.setItem('bg-audio-pos', audio.currentTime.toString()); }catch(e){} }, 1000);
+      update();
+    })();
+  </script>
+
+  <main id="pjax-content">
+    <a href="../index.html">Back to Homepage</a>
+
+    <h1>What's buzzing in the world of Ai</h1>
+    <h2>Entry #2 – Friend.com</h2>
+
+    <p>
+      Friend.com is an AI startup founded by Avi Schiffmann, known for creating a COVID-19 tracking website.
+      The company has developed a wearable AI companion designed to combat loneliness by providing emotional support. The device, resembling a pendant,
+      is worn around the neck and continuously listens to the user's environment. It connects to a smartphone app via Bluetooth and uses the Claude 3.5 language
+      model to offer real-time, personalized interactions. The device can respond to voice prompts and also proactively engage with users based on contextual cues.
+      Priced at $99, the Friend pendant boasts a 15-hour battery life and comes in various colors. It is set to ship in January 2025. The company has already received over 1,000 pre-orders.
+    </p>
+
+    <img src="https://static.independent.co.uk/2024/07/31/16/cta-desktop.jpg" width="400" alt="">
+    <img src="https://i.ytimg.com/vi/O_Q1hoEhfk4/maxresdefault.jpg" width="400" alt="">
+  </main>
+
+</body>
+
+</html>

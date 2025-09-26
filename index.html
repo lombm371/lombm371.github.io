@@ -7,29 +7,155 @@
     <title>My Harmonic Collection</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-<audio id="bg-audio" autoplay loop style="display:none">
-  <source src="images/The Beast OST Suite.mp3" type="audio/mpeg">
-</audio>
-<body>
-    <h1>Fateful Expansion of Ai!</h1>
-    <ul>
-        <li>
-            <a href="entry-1/index.html">Entry 1</a>
-        </li>
-        <li>
-            <a href="entry-2/index.html">Entry 2</a>
-        </li>
-        <li>
-            <a href="#">Entry 3</a>
-        </li>
-    </ul>  
 
-    <img src="images/AdobeStock_565971196.png" width="600" height="450" scale="x2">
-   
+<body>
+    <!-- Persistent audio player (kept outside the dynamic content) -->
+        <audio id="bg-audio" loop>
+            <source src="/images/The Beast OST Suite.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <header>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="entry-1/index.html">Entry 1</a></li>
+                <li><a href="entry-2/index.html">Entry 2</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Content area that will be swapped via PJAX so audio isn't interrupted -->
+    <main id="content">
+        <div id="pjax-content">
+            <h1>Fateful Expansion of Ai!</h1>
+            <ul>
+                <li><a href="entry-1/index.html">Entry 1</a></li>
+                <li><a href="entry-2/index.html">Entry 2</a></li>
+                <li><a href="#">Entry 3</a></li>
+            </ul>
+
+            <img src="images/AdobeStock_565971196.png" width="600" height="450" alt="">
+        </div>
+    </main>
+
+    <!-- Small visible audio control so users can start/pause playback (autoplay may be blocked by browsers) -->
+    <div class="audio-toggle" aria-hidden="false">
+        <button id="audio-toggle">Play music</button>
+    </div>
+
+    <script>
+        // Simple PJAX: intercept same-origin link clicks, fetch the page, extract #pjax-content, replace content
+        (function () {
+            const audio = document.getElementById('bg-audio');
+            const toggle = document.getElementById('audio-toggle');
+            const content = document.getElementById('content');
+
+                    // Update toggle label based on state
+                    function updateToggle() {
+                        toggle.textContent = audio && !audio.paused ? 'Pause music' : 'Play music';
+                    }
+
+                    // Try to restore playback position & playing state from localStorage
+                    (function restorePlayback() {
+                        try {
+                            const pos = parseFloat(localStorage.getItem('bg-audio-pos') || '0');
+                            const playing = localStorage.getItem('bg-audio-playing') === 'true';
+                            if (!isNaN(pos) && pos > 0) {
+                                // wait for metadata before setting time
+                                audio.addEventListener('loadedmetadata', function () {
+                                    try { audio.currentTime = Math.min(pos, audio.duration || pos); } catch (e) { }
+                                }, {once: true});
+                            }
+                            if (playing) {
+                                // user wants playback — try to play (may be blocked until user gesture)
+                                audio.play().catch(()=>{});
+                            }
+                        } catch (err) { /* ignore storage errors */ }
+                    })();
+
+                    toggle.addEventListener('click', function () {
+                        if (!audio) return;
+                        if (audio.paused) {
+                            audio.play().catch(() => {
+                                toggle.textContent = 'Enable audio in browser';
+                            });
+                        } else {
+                            audio.pause();
+                        }
+                        // persist playing state
+                        try { localStorage.setItem('bg-audio-playing', (!audio.paused).toString()); } catch (e) {}
+                        updateToggle();
+                    });
+
+                    // Persist currentTime regularly so direct loads can resume
+                    setInterval(function () {
+                        try { if (audio && !isNaN(audio.currentTime)) localStorage.setItem('bg-audio-pos', audio.currentTime.toString()); } catch (e) {}
+                    }, 1000);
+
+            // Helper to fetch and replace content
+            async function loadUrl(url, addToHistory = true) {
+                try {
+                    const res = await fetch(url, {cache: 'no-store'});
+                    if (!res.ok) throw new Error('Network response was not ok');
+                    const text = await res.text();
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(text, 'text/html');
+
+                    // Try to find the pjax content in the returned doc
+                    const newContent = doc.querySelector('#pjax-content') || doc.querySelector('main') || doc.body;
+                    const newTitle = doc.querySelector('title');
+
+                    if (newContent) {
+                        // Replace inner content of the #content element
+                        const wrapper = document.createElement('div');
+                        wrapper.innerHTML = newContent.innerHTML;
+                        // optional: simple fade
+                        content.style.opacity = 0;
+                        setTimeout(() => {
+                            content.innerHTML = wrapper.innerHTML;
+                            content.style.opacity = 1;
+                        }, 160);
+                    }
+
+                    if (newTitle) document.title = newTitle.textContent;
+
+                    if (addToHistory) history.pushState({url: url}, '', url);
+                } catch (err) {
+                    console.error('PJAX load failed for', url, err);
+                    // fallback to full navigation
+                    window.location.href = url;
+                }
+            }
+
+            // Intercept clicks on internal links
+            document.addEventListener('click', function (e) {
+                const a = e.target.closest('a');
+                if (!a) return;
+                const href = a.getAttribute('href');
+                if (!href) return;
+                // Only handle same-origin and relative links
+                if (href.startsWith('http') && new URL(href, location.href).origin !== location.origin) return;
+                // Allow hash and external anchors to behave normally
+                if (href.startsWith('#') || a.target === '_blank' || a.hasAttribute('download')) return;
+
+                // Prevent default navigation and load via PJAX
+                e.preventDefault();
+                const url = new URL(href, location.href).href;
+                if (url === location.href) return; // same URL
+                loadUrl(url);
+            });
+
+            // Handle back/forward
+            window.addEventListener('popstate', function (e) {
+                const url = location.href;
+                loadUrl(url, false);
+            });
+
+            // Initialize toggle label
+            updateToggle();
+        })();
+    </script>
+
 </body>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+</html>
