@@ -10,43 +10,23 @@
 
 <body>
   <!-- Audio for direct page loads (index.html also provides audio for PJAX navigation) -->
-  <audio id="bg-audio" loop>
+  <audio id="bg-audio" autoplay loop playsinline preload="auto">
     <source src="/images/The Beast OST Suite.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
-  <div class="audio-toggle" aria-hidden="false">
-    <button id="audio-toggle">Play music</button>
-  </div>
 
   <script>
-    // Minimal audio toggle for direct loads + restore state from localStorage
+    // Attempt autoplay immediately; if browser blocks it, a user gesture will trigger playback.
     (function(){
       var audio = document.getElementById('bg-audio');
-      var toggle = document.getElementById('audio-toggle');
-      if(!toggle || !audio) return;
-      function update(){ toggle.textContent = audio.paused ? 'Play music' : 'Pause music'; }
-
-      try {
-        var pos = parseFloat(localStorage.getItem('bg-audio-pos') || '0');
-        var playing = localStorage.getItem('bg-audio-playing') === 'true';
-        if(!isNaN(pos) && pos > 0) {
-          audio.addEventListener('loadedmetadata', function(){ try{ audio.currentTime = Math.min(pos, audio.duration || pos); }catch(e){} }, {once:true});
-        }
-        if(playing) audio.play().catch(()=>{});
-      } catch(e) {}
-
-      toggle.addEventListener('click', function(){
-        if(audio.paused) audio.play().catch(()=>{ toggle.textContent='Enable audio in browser'; }); else audio.pause();
-        try{ localStorage.setItem('bg-audio-playing', (!audio.paused).toString()); }catch(e){}
-        update();
-      });
-      setInterval(function(){ try{ if(audio && !isNaN(audio.currentTime)) localStorage.setItem('bg-audio-pos', audio.currentTime.toString()); }catch(e){} }, 1000);
-      update();
+      function tryPlay(){ if(!audio) return; audio.play().catch(()=>{}); document.removeEventListener('click', tryPlay); document.removeEventListener('touchstart', tryPlay); }
+      tryPlay();
+      document.addEventListener('click', tryPlay);
+      document.addEventListener('touchstart', tryPlay, {passive:true});
     })();
   </script>
 
   <main id="pjax-content">
-    <a href="../index.html">Back to Homepage</a>
 
     <h1>What's buzzing in the world of Ai</h1>
 
