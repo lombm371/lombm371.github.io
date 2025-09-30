@@ -18,3 +18,7 @@ image {
     width: 100%;
     height: auto;
 }
+.multi-column {
+  column-count: 3;   
+  column-gap: 30px;  
+}
