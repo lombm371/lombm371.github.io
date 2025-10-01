@@ -1,5 +1,5 @@
 body {
-    background-color: rgb(150, 154, 149);
+    background-color: rgb(255, 255, 255);
     font-family: 'claredon', Arial, Helvetica, sans-serif, monospace;
     color: rgb(57, 57, 173);
     text-align: left;
@@ -9,7 +9,7 @@ body {
     background-position: center; 
     background-repeat: no-repeat; 
     margin: 0; height: 100vh;
-    background-size: 200px auto;
+    background-size: 600px auto;
 }
 .class {
     font-family: 'Helvetica', Arial, Helvetica, sans-serif, monospace;
@@ -27,5 +27,8 @@ image {
 .multi-column {
   column-count: 3;   
   column-gap: 30px;  
+}
+.hidden-audio {
+  display: none; /* hides the player */
 }
 
