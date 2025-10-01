@@ -4,12 +4,7 @@ body {
     color: rgb(57, 57, 173);
     text-align: left;
     margin: 40px;
-    background-image: url(images/digital-darkrrom-final-copy.jpg); 
-    /* background-size: cover;  */
-    background-position: center; 
-    background-repeat: no-repeat; 
-    margin: 0; height: 100vh;
-    background-size: 600px auto;
+    
 }
 .class {
     font-family: 'Helvetica', Arial, Helvetica, sans-serif, monospace;
@@ -30,5 +25,9 @@ image {
 }
 .hidden-audio {
   display: none; /* hides the player */
+}
+.center-img {
+  display: block;
+  margin: 0 auto;
 }
 
