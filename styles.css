@@ -22,3 +22,14 @@ image {
   column-count: 3;   
   column-gap: 30px;  
 }
+
+body {
+  margin: 0;
+  padding: 0;
+  background-image: url(images/8692FC05-42CA-4B20-8E22-DCAB1CB659E0.jpg); /* path to your image */
+  background-size: cover;     /* make image fill the screen */
+  background-position: center; /* keep image centered */
+  background-repeat: no-repeat; /* prevent tiling */
+  height: 100vh; /* make sure it covers full height */
+}
+
