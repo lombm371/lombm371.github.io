@@ -4,6 +4,12 @@ body {
     color: rgb(57, 57, 173);
     text-align: left;
     margin: 40px;
+    background-image: url(images/digital-darkrrom-final-copy.jpg); 
+    /* background-size: cover;  */
+    background-position: center; 
+    background-repeat: no-repeat; 
+    margin: 0; height: 100vh;
+    background-size: 200px auto;
 }
 .class {
     font-family: 'Helvetica', Arial, Helvetica, sans-serif, monospace;
@@ -21,15 +27,5 @@ image {
 .multi-column {
   column-count: 3;   
   column-gap: 30px;  
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  background-image: url(images/8692FC05-42CA-4B20-8E22-DCAB1CB659E0.jpg); /* path to your image */
-  background-size: cover;     /* make image fill the screen */
-  background-position: center; /* keep image centered */
-  background-repeat: no-repeat; /* prevent tiling */
-  height: 100vh; /* make sure it covers full height */
 }
 
