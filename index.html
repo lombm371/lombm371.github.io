@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <h1>Fateful Expansion of Ai!</h1>
+    <!-- <h1>Fateful Expansion of Ai!</h1> -->
     <ul>
         <li>
             <a href="entry-1/index.html">Entry 1</a>
@@ -46,13 +46,14 @@
             function unmuteOnce(){
                 try{
                     audio.muted = false;
-                    audio.volume = 0.9;
+                    audio.volume = 0.7;
                     audio.play().catch(()=>{});
                     console.log('Background audio unmuted by user gesture.');
                 }catch(e){ console.warn(e); }
                 document.removeEventListener('click', unmuteOnce);
                 document.removeEventListener('keydown', unmuteOnce);
                 document.removeEventListener('touchstart', unmuteOnce);
+                document.removeEventListener('scroll', unmuteOnce);
             }
 
             document.addEventListener('click', unmuteOnce, {once:true});
@@ -60,8 +61,7 @@
             document.addEventListener('touchstart', unmuteOnce, {once:true});
         })();
     </script>
-<img src="images/digital-darkrrom-final-copy.jpg" alt="" srcset="" width="600px" height="auto" class="center-img"> 
+<img src="images/digital-darkrrom-final-copy.jpg" alt="" srcset="" width="800px" height="auto" class="center-img">
+
 </body>
-
 </html>
-
