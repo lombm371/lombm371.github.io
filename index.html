@@ -8,60 +8,85 @@
 </head>
 
 <body>
-    <!-- <h1>Fateful Expansion of Ai!</h1> -->
-    <ul>
-        <li>
-            <a href="entry-1/index.html">Entry 1</a>
-        </li>
-        <li>
-            <a href="entry-2/index.html">Entry 2</a>
-        </li>
-        <li>
-            <a href="entry-3/index.html">Entry 3</a>
-        </li>
-    </ul>  
-
-
-
+    <!-- persistent hidden audio lives here so it never unloads during PJAX navigation -->
     <audio id="bg-audio" autoplay loop muted preload="auto" class="hidden-audio">
         <source src="audio/SpotiDownloader.com - Rencontre 2014 - Bertrand Bonello.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
 
+    <!-- page content container swapped by PJAX -->
+    <main id="pjax-content">
+        <a id="entries-link" href="entry-homepage/index.html" title="Open entries">
+            <img id="entries-image" src="images/digital-darkrrom-final-copy.jpg" alt="Open entries" width="800" class="center-img">
+        </a>
+    </main>
+
+    <!-- PJAX navigation: fetch pages and replace #pjax-content so the audio element remains loaded -->
     <script>
         (function(){
             const audio = document.getElementById('bg-audio');
-            if(!audio) return;
-            // set a sensible default volume while muted; will be used after unmute
-            audio.volume = 0.9;
+            // ensure audio starts muted (autoplay policies)
+            if(audio){ audio.volume = 0.8; audio.play().catch(()=>{}); }
 
-            // Attempt to play (muted autoplay is allowed in most browsers)
-            audio.play().then(()=>{
-                console.log('Background audio autoplaying (muted).');
-            }).catch((err)=>{
-                console.warn('Autoplay attempt failed:', err);
-            });
-
-            // On first user gesture, unmute so audio is audible
-            function unmuteOnce(){
-                try{
-                    audio.muted = false;
-                    audio.volume = 0.7;
-                    audio.play().catch(()=>{});
-                    console.log('Background audio unmuted by user gesture.');
-                }catch(e){ console.warn(e); }
-                document.removeEventListener('click', unmuteOnce);
-                document.removeEventListener('keydown', unmuteOnce);
-                document.removeEventListener('touchstart', unmuteOnce);
-                document.removeEventListener('scroll', unmuteOnce);
+            // Helper to run inline scripts from fetched HTML
+            function runScripts(container){
+                const scripts = container.querySelectorAll('script');
+                scripts.forEach(old => {
+                    const s = document.createElement('script');
+                    if (old.src) s.src = old.src;
+                    if (old.type) s.type = old.type;
+                    if (!old.src) s.textContent = old.textContent;
+                    document.body.appendChild(s);
+                    document.body.removeChild(s);
+                });
             }
 
-            document.addEventListener('click', unmuteOnce, {once:true});
-            document.addEventListener('keydown', unmuteOnce, {once:true});
-            document.addEventListener('touchstart', unmuteOnce, {once:true});
+            async function loadUrl(url, addToHistory = true){
+                try{
+                    const res = await fetch(url, {cache: 'no-store'});
+                    if(!res.ok) throw new Error('Network response was not ok');
+                    const text = await res.text();
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(text, 'text/html');
+                    const newContent = doc.querySelector('#pjax-content') || doc.querySelector('main') || doc.body;
+                    const newTitle = doc.querySelector('title');
+                    if(newContent){
+                        const target = document.getElementById('pjax-content');
+                        if(target){
+                            target.innerHTML = newContent.innerHTML;
+                            runScripts(target);
+                            window.scrollTo(0,0);
+                        } else {
+                            // fallback full navigation
+                            window.location.href = url;
+                        }
+                    }
+                    if(newTitle) document.title = newTitle.textContent;
+                    if(addToHistory) history.pushState({url:url}, '', url);
+                }catch(err){
+                    console.error('PJAX load failed:', err);
+                    window.location.href = url;
+                }
+            }
+
+            document.addEventListener('click', function(e){
+                const a = e.target.closest('a');
+                if(!a) return;
+                const href = a.getAttribute('href');
+                if(!href) return;
+                // ignore external links and anchors
+                if(href.startsWith('http') && new URL(href, location.href).origin !== location.origin) return;
+                if(href.startsWith('#') || a.target === '_blank' || a.hasAttribute('download') || a.href.indexOf('mailto:') === 0) return;
+                e.preventDefault();
+                const url = new URL(href, location.href).href;
+                if(url === location.href) return;
+                loadUrl(url);
+            }, true);
+
+            window.addEventListener('popstate', function(e){
+                loadUrl(location.href, false);
+            });
         })();
     </script>
-<img src="images/digital-darkrrom-final-copy.jpg" alt="" srcset="" width="800px" height="auto" class="center-img">
-
 </body>
 </html>

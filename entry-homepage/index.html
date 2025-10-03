@@ -1,46 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Entries</title>
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    .entries { display:flex; gap:16px; flex-direction:column; align-items:center; padding:40px; }
+    .entry-btn { display:inline-block; padding:12px 18px; background:#fff; color:#333; border-radius:8px; text-decoration:none; font-weight:700; border:1px solid #ccc; }
+  </style>
 </head>
 <body>
-    <a href="../index.html">Back to Homepage</a>
-</body>
-</html> <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Harmonic Collection – Entry 1</title>
-  <link rel="stylesheet" href="../styles.css">
-</head>
-<audio id="bg-audio" loop muted preload="auto" class="hidden-audio">
+  <a href="../index.html">← Back to homepage</a>
+  <main class="entries">
+    <h1>Entries</h1>
+    <a class="entry-btn" href="../entry-1/index.html">Entry 1</a>
+    <a class="entry-btn" href="../entry-2/index.html">Entry 2</a>
+    <a class="entry-btn" href="../entry-3/index.html">Entry-3</a>
+  </main>
+  <!-- Hidden background audio to continue playback after navigation from homepage -->
+  <audio id="bg-audio" loop muted preload="auto" class="hidden-audio">
     <source src="../audio/SpotiDownloader.com - Rencontre 2014 - Bertrand Bonello.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
-<body>
 
-  <h1>What's buzzing in the world of Ai</h1>
-
-  <h2>Entry #1 – what is Ai 2027.com</h2>
-
-  <p>
-    The AI-2027 website presents a scenario about how artificial intelligence might 
-    develop over the next few years, focusing on the 
-    possibility of rapid and dramatic change. It suggests that by 2027, AI systems 
-    could become “superhuman” in certain tasks, especially through automating AI research 
-    and development itself. In this vision, each generation of AI agents builds better, 
-    cheaper, and more capable successors, creating a feedback loop that accelerates progress. The scenario 
-    explores two possible directions: one where competition pushes countries and companies 
-    to advance as quickly as possible, even at the expense of safety, and another where development slows 
-    because of regulation and careful alignment work.
-  </p>
-
-<img src="https://ai-2027.com/combined-headline.png" width="320" height=auto alt="">
-<img src="https://cdn.prod.website-files.com/6449a72526ec4987103ca41b/67f048ed981300d296259d05_The%20Neuron%20Header%20-%20AI%202027%20(1).png" width="330" height=auto alt="">
-<img src="https://res.cloudinary.com/lesswrong-2-0/image/upload/f_auto,q_auto/v1/mirroredImages/JLWxQSAf9jkxq8Y5m/vog46aiew4bqm9gcloaf" width="320" height=auto alt="">
-<script>
+  <script>
     (function(){
       const audio = document.getElementById('bg-audio');
       try{
@@ -81,6 +65,5 @@
       try{ const muted = sessionStorage.getItem('bgMuted') === '1'; if(audio) audio.muted = muted; update(); }catch(e){}
     })();
   </script>
+</body>
 </html>
-
-<!-- content only — PJAX will load this into the main page's #pjax-content -->
