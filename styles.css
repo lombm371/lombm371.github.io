@@ -1,19 +1,30 @@
 body {
     background-color: rgb(255, 255, 255);
-    font-family: 'claredon', Arial, Helvetica, sans-serif, monospace;
+  font-family: 'Futura', 'Trebuchet MS', Arial, Helvetica, sans-serif;
     color: rgb(57, 57, 173);
     text-align: left;
     margin: 40px;
     
 }
 .class {
-    font-family: 'Helvetica', Arial, Helvetica, sans-serif, monospace;
+  font-family: 'Futura', 'Trebuchet MS', Arial, Helvetica, sans-serif;
     color: rgb(57, 57, 173);
 }
 
 h1 {
-    font-family: 'Helvetica', Arial, Helvetica, sans-serif, monospace;
-    color: rgb(57, 57, 173);
+  /* Use BeVietnamPro ExtraBold for headings when available */
+  font-family: 'BeVietnamPro ExtraBold', 'Futura', 'Trebuchet MS', Arial, Helvetica, sans-serif;
+  font-size: 60px;
+  font-weight: 1000;
+  color: rgb(57, 57, 173);
+}
+
+@font-face {
+  font-family: 'BeVietnamPro ExtraBold';
+  src: url('fonts/BeVietnamPro-ExtraBold.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
 }
 image {
     width: 100%;
@@ -29,6 +40,32 @@ image {
 .center-img {
   display: block;
   margin: 0 auto;
+}
+
+/* Ensure all paragraph text uses Helvetica where available */
+p {
+  font-family: 'Helvetica', Arial, sans-serif;
+}
+
+/* Entry images: align to left and space 80px from surrounding content and each other */
+.entry-img {
+  float: left;
+  margin-right: 80px;
+  margin-bottom: 80px;
+  max-width: 45%; /* keep images reasonable on small screens */
+  height: auto;
+}
+
+/* Clearfix for content container when needed */
+.clearfix::after {
+  content: '';
+  display: table;
+  clear: both;
+}
+
+/* Paragraph word-wrap: each generated line is a block */
+.pw-line {
+  display: block;
 }
 
 
