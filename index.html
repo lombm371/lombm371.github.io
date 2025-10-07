@@ -88,5 +88,30 @@
             });
         })();
     </script>
+                <!-- Global mute/unmute floating control (persistent) -->
+                <div class="audio-toggle" aria-hidden="false">
+                    <button id="global-audio-toggle" title="Toggle audio">🔈</button>
+                </div>
+
+                <script>
+                    (function(){
+                        const btn = document.getElementById('global-audio-toggle');
+                        const audio = document.getElementById('bg-audio');
+                        if(!btn) return;
+                        function update(){
+                            try{ const muted = sessionStorage.getItem('bgMuted') === '1'; btn.textContent = muted ? '🔇' : '🔈'; }catch(e){}
+                        }
+                        btn.addEventListener('click', function(){
+                            try{
+                                const muted = sessionStorage.getItem('bgMuted') === '1';
+                                const newMuted = !muted;
+                                sessionStorage.setItem('bgMuted', newMuted ? '1' : '0');
+                                if(audio){ audio.muted = newMuted; if(!newMuted) audio.play().catch(()=>{}); }
+                                update();
+                            }catch(e){ console.warn(e); }
+                        });
+                        try{ const muted = sessionStorage.getItem('bgMuted') === '1'; if(audio) audio.muted = muted; update(); }catch(e){}
+                    })();
+                </script>
 </body>
 </html>
