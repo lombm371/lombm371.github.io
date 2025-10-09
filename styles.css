@@ -62,10 +62,10 @@ p {
   display: table;
   clear: both;
 }
-
-/* Paragraph word-wrap: each generated line is a block */
-.pw-line {
-  display: block;
-}
-
+ .audio-toggle {
+  position:fixed;
+  left:20px;
+  bottom:20px;
+  
+ }
 

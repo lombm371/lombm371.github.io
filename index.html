@@ -20,7 +20,10 @@
             <img id="entries-image" src="images/digital-darkrrom-final-copy.jpg" alt="Open entries" width="800" class="center-img">
         </a>
     </main>
-
+<!-- Global mute/unmute floating control (persistent) -->
+                <div class="audio-toggle" aria-hidden="false">
+                    <button id="global-audio-toggle" title="Toggle audio">🔈</button>
+                </div>
     <!-- PJAX navigation: fetch pages and replace #pjax-content so the audio element remains loaded -->
     <script>
         (function(){
@@ -88,39 +91,7 @@
             });
         })();
     </script>
-        <script>
-            // Word-wrap paragraphs: limit to 7 words per visual line
-            (function(){
-                function wrapParagraphs(){
-                    document.querySelectorAll('p').forEach(p => {
-                        // skip if already processed
-                        if(p.dataset.pwProcessed) return;
-                        const words = p.textContent.trim().split(/\s+/);
-                        if(words.length <= 7) return;
-                        const fragments = [];
-                        for(let i=0;i<words.length;i+=7){
-                            fragments.push(words.slice(i,i+7).join(' '));
-                        }
-                        p.innerHTML = fragments.map(f => `<span class="pw-line">${f}</span>`).join('');
-                        p.dataset.pwProcessed = '1';
-                    });
-                }
-
-                // run on load
-                window.addEventListener('load', wrapParagraphs);
-
-                // re-run after PJAX content swaps by observing #pjax-content
-                const target = document.getElementById('pjax-content');
-                if(target){
-                    const obs = new MutationObserver((m)=>{ wrapParagraphs(); });
-                    obs.observe(target, {childList:true, subtree:true});
-                }
-            })();
-        </script>
-                <!-- Global mute/unmute floating control (persistent) -->
-                <div class="audio-toggle" aria-hidden="false">
-                    <button id="global-audio-toggle" title="Toggle audio">🔈</button>
-                </div>
+                
 
                 <script>
                     (function(){
