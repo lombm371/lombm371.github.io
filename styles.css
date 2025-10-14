@@ -1,14 +1,14 @@
 body {
     background-color: rgb(255, 255, 255);
   font-family: 'Futura', 'Trebuchet MS', Arial, Helvetica, sans-serif;
-    color: rgb(57, 57, 173);
+    color: rgb(0, 0, 0);
     text-align: left;
     margin: 40px;
     
 }
 .class {
   font-family: 'Futura', 'Trebuchet MS', Arial, Helvetica, sans-serif;
-    color: rgb(57, 57, 173);
+    color: rgb(0, 0, 0);
 }
 
 h1 {
@@ -16,13 +16,13 @@ h1 {
   font-family: 'BeVietnamPro ExtraBold', 'Futura', 'Trebuchet MS', Arial, Helvetica, sans-serif;
   font-size: 60px;
   font-weight: 1000;
-  color: rgb(57, 57, 173);
+  color: rgb(0, 0, 0);
 }
 h3 {
   font-family: 'BeVietnamPro ExtraBold', 'Futura', 'Trebuchet MS', Arial, Helvetica, sans-serif;
   font-size: 25px;
   font-weight: 1000;
-  color: rgb(57, 57, 173);
+  color: rgb(0, 0, 0);
 }
 
 @font-face {
